@@ -1,24 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import StatsPage from "./pages/StatsPage";
+import { Navigate, useParams } from "react-router-dom";
+
+const RedirectPage = () => {
+  const { code } = useParams();
+  const data = JSON.parse(localStorage.getItem("urls") || "[]");
+  const urlObj = data.find((u) => u.shortcode === code);
+
+  if (urlObj) {
+    window.location.href = urlObj.longUrl;
+  } else {
+    return <div>URL not found</div>;
+  }
+};
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/stats" element={<StatsPage />} />
+      <Route path="/:code" element={<RedirectPage />} />
+    </Routes>
   );
 }
 
